@@ -41,6 +41,11 @@ mock-init-centos7:
 	mkdir -p $(MOCK_RESULT_DIR)
 	mock -r $(MOCK_CONFIG_DIR)/centos7.cfg --init
 
+.PHONY: mock-init-centos8
+mock-init-centos8:
+	mkdir -p $(MOCK_RESULT_DIR)
+	mock -r $(MOCK_CONFIG_DIR)/centos8.cfg --init
+
 .PHONY: mock-default
 mock-default: srpm
 	mkdir -p $(MOCK_RESULT_DIR)
@@ -65,11 +70,17 @@ mock-centos7: srpm
 	mock -r $(MOCK_CONFIG_DIR)/centos7.cfg --resultdir=$(MOCK_RESULT_DIR)/centos7 \
 		rpm/SRPMS/$(PROJECT)-$(VERSION)-*.src.rpm
 
+.PHONY: mock-centos8
+mock-centos8: srpm
+	mkdir -p $(MOCK_RESULT_DIR)
+	mock -r $(MOCK_CONFIG_DIR)/centos8.cfg --resultdir=$(MOCK_RESULT_DIR)/centos8 \
+		rpm/SRPMS/$(PROJECT)-$(VERSION)-*.src.rpm
+
 .PHONY: mock-all
-mock-all: mock-default mock-fedora39 mock-centos7
+mock-all: mock-default mock-fedora39 mock-centos8
 
 .PHONY: mock-all-legacy
-mock-all-legacy: mock-default mock-fedora39 mock-centos6
+mock-all-legacy: mock-default mock-fedora39 mock-centos7 mock-centos6
 
 .PHONY: mock-clean
 mock-clean:
@@ -78,6 +89,7 @@ mock-clean:
 	mock -r $(MOCK_CONFIG_DIR)/fedora39.cfg --clean || true
 	mock -r $(MOCK_CONFIG_DIR)/centos6.cfg --clean || true
 	mock -r $(MOCK_CONFIG_DIR)/centos7.cfg --clean || true
+	mock -r $(MOCK_CONFIG_DIR)/centos8.cfg --clean || true
 
 .PHONY: clean-tarball
 clean-tarball:
@@ -99,10 +111,12 @@ help:
 	@echo "Mock 빌드 타겟:"
 	@echo "  mock-init-default  - CentOS Stream 9 Mock 환경 초기화"
 	@echo "  mock-init-fedora39 - Fedora 39 Mock 환경 초기화"
+	@echo "  mock-init-centos8  - CentOS Stream 8 Mock 환경 초기화 (권장)"
 	@echo "  mock-init-centos7  - CentOS 7 Mock 환경 초기화"
 	@echo "  mock-init-centos6  - CentOS 6 Mock 환경 초기화 (레거시)"
 	@echo "  mock-default       - CentOS Stream 9에서 SRPM으로 Mock 빌드"
 	@echo "  mock-fedora39      - Fedora 39에서 SRPM으로 Mock 빌드"
+	@echo "  mock-centos8       - CentOS Stream 8에서 SRPM으로 Mock 빌드 (권장)"
 	@echo "  mock-centos7       - CentOS 7에서 SRPM으로 Mock 빌드"
 	@echo "  mock-centos6       - CentOS 6에서 SRPM으로 Mock 빌드 (레거시)"
 	@echo "  mock-all           - 주요 배포판에서 SRPM으로 Mock 빌드"

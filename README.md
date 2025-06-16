@@ -19,6 +19,9 @@ rpmbuild-test/
 └── mock/
     ├── default.cfg              # CentOS Stream 9 Mock 설정
     ├── fedora39.cfg             # Fedora 39 Mock 설정
+    ├── centos8.cfg              # CentOS Stream 8 Mock 설정 (권장)
+    ├── centos7.cfg              # CentOS 7 Mock 설정 (레거시)
+    ├── centos6.cfg              # CentOS 6 Mock 설정 (레거시)
     └── results/                 # Mock 빌드 결과물 저장소
 ```
 
@@ -42,7 +45,10 @@ make mock-default
 # Fedora 39에서 빌드
 make mock-fedora39
 
-# 모든 배포판에서 빌드
+# CentOS Stream 8에서 빌드 (권장)
+make mock-centos8
+
+# 모든 주요 배포판에서 빌드
 make mock-all
 ```
 
@@ -52,6 +58,11 @@ make mock-all
 # Mock 환경 초기화 (처음 사용 시)
 make mock-init-default
 make mock-init-fedora39
+make mock-init-centos8
+
+# 레거시 환경 초기화 (호환성 문제 있을 수 있음)
+make mock-init-centos7
+make mock-init-centos6
 
 # Mock 결과 및 환경 정리
 make mock-clean
@@ -90,6 +101,9 @@ ls mock/results/default/hello_world-1.0-1.*.x86_64.rpm
 
 # Fedora 39 빌드 결과
 ls mock/results/fedora39/hello_world-1.0-1.*.x86_64.rpm
+
+# CentOS Stream 8 빌드 결과
+ls mock/results/centos8/hello_world-1.0-1.*.x86_64.rpm
 ```
 
 ### 6. 패키지 설치 및 테스트
@@ -174,7 +188,7 @@ newgrp mock
 2. **Tarball 생성**: 소스 코드를 tarball로 패키징
 3. **기본 RPM 빌드**: rpmbuild를 사용한 로컬 환경에서의 패키지 생성
 4. **Mock 빌드**: 격리된 chroot 환경에서의 clean 빌드
-5. **다중 배포판 빌드**: CentOS Stream, Fedora에서의 호환성 테스트
+5. **다중 배포판 빌드**: CentOS Stream 9/8, Fedora에서의 호환성 테스트
 6. **설치/제거**: 생성된 RPM 패키지의 설치 및 제거 테스트
 7. **파일 배치**: 바이너리가 올바른 위치에 설치되는지 확인
 
