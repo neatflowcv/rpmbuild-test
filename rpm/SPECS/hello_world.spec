@@ -21,15 +21,14 @@ It demonstrates basic RPM packaging with a Makefile.
 %setup -q -n hello_world-%{version} # tarball 이름에 맞춰 디렉토리 이름 지정
 
 %build
-cd src # Makefile이 src 디렉토리 안에 있으므로 이동
-make build
+make -C src build
 
 %install
-cd src # Makefile이 src 디렉토리 안에 있으므로 이동
-make install DESTDIR=%{buildroot} PREFIX=%{_prefix}
+make -C src install DESTDIR=%{buildroot} PREFIX=%{_prefix}
 
 %files
 %{_bindir}/hello
+%doc
 
 %changelog
 * Mon Jun 16 2025 Your Name <your.email@example.com> - 1.0-1
