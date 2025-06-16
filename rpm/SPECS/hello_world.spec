@@ -3,7 +3,6 @@ Version:    1.0
 Release:    1%{?dist}
 Summary:    A simple Hello World program
 License:    Proprietary
-URL:        https://example.com/hello_world
 
 Source0:    hello_world-%{version}.tar.gz
 
@@ -31,5 +30,5 @@ make -C src install DESTDIR=%{buildroot} PREFIX=%{_prefix}
 %doc
 
 %changelog
-* Mon Jun 16 2025 Your Name <your.email@example.com> - 1.0-1
-- Initial release of Hello World program with Makefile
+* Mon Jun 16 2025 RPM Builder <builder@localhost> - 1.0-1
+- Initial release
