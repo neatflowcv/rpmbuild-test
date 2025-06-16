@@ -12,9 +12,13 @@ tarball: clean-tarball
 	tar -czf rpm/SOURCES/$(PROJECT)-$(VERSION).tar.gz $(PROJECT)-$(VERSION)
 	rm -rf $(PROJECT)-$(VERSION)
 
+.PHONY: srpm
+srpm: tarball
+	rpmbuild --define "_topdir $(PWD)/rpm" -bs rpm/SPECS/hello_world.spec
+
 .PHONY: rpm
-rpm: tarball
-	rpmbuild --define "_topdir $(PWD)/rpm" -ba rpm/SPECS/hello_world.spec
+rpm: srpm
+	rpmbuild --define "_topdir $(PWD)/rpm" --rebuild rpm/SRPMS/$(PROJECT)-$(VERSION)-*.src.rpm
 
 # Mock 빌드 타겟들
 .PHONY: mock-init-default
@@ -28,16 +32,16 @@ mock-init-fedora39:
 	mock -r $(MOCK_CONFIG_DIR)/fedora39.cfg --init
 
 .PHONY: mock-default
-mock-default: tarball
+mock-default: srpm
 	mkdir -p $(MOCK_RESULT_DIR)
 	mock -r $(MOCK_CONFIG_DIR)/default.cfg --resultdir=$(MOCK_RESULT_DIR)/default \
-		--sources=rpm/SOURCES --spec=rpm/SPECS/hello_world.spec
+		rpm/SRPMS/$(PROJECT)-$(VERSION)-*.src.rpm
 
 .PHONY: mock-fedora39
-mock-fedora39: tarball
+mock-fedora39: srpm
 	mkdir -p $(MOCK_RESULT_DIR)
 	mock -r $(MOCK_CONFIG_DIR)/fedora39.cfg --resultdir=$(MOCK_RESULT_DIR)/fedora39 \
-		--sources=rpm/SOURCES --spec=rpm/SPECS/hello_world.spec
+		rpm/SRPMS/$(PROJECT)-$(VERSION)-*.src.rpm
 
 .PHONY: mock-all
 mock-all: mock-default mock-fedora39
@@ -62,14 +66,15 @@ clean: clean-tarball mock-clean
 help:
 	@echo "사용 가능한 타겟:"
 	@echo "  tarball          - SOURCES 디렉토리에 tarball 생성"
-	@echo "  rpm              - tarball 생성 후 RPM 패키지 빌드"
+	@echo "  srpm             - SRPM 패키지 생성"
+	@echo "  rpm              - SRPM으로부터 RPM 패키지 빌드"
 	@echo ""
 	@echo "Mock 빌드 타겟:"
 	@echo "  mock-init-default  - CentOS Stream 9 Mock 환경 초기화"
 	@echo "  mock-init-fedora39 - Fedora 39 Mock 환경 초기화"
-	@echo "  mock-default       - CentOS Stream 9에서 Mock 빌드"
-	@echo "  mock-fedora39      - Fedora 39에서 Mock 빌드"
-	@echo "  mock-all           - 모든 배포판에서 Mock 빌드"
+	@echo "  mock-default       - CentOS Stream 9에서 SRPM으로 Mock 빌드"
+	@echo "  mock-fedora39      - Fedora 39에서 SRPM으로 Mock 빌드"
+	@echo "  mock-all           - 모든 배포판에서 SRPM으로 Mock 빌드"
 	@echo "  mock-clean         - Mock 결과 및 환경 정리"
 	@echo ""
 	@echo "  clean            - 생성된 파일들 정리"
