@@ -5,8 +5,7 @@ Summary:    A simple Hello World program
 License:    Proprietary
 URL:        https://example.com/hello_world
 
-# Source0:    %{name}-%{version}.tar.gz   # Makefile 추가로 소스 tarball 구성 변경 가능성
-Source0:    hello_world-%{version}.tar.gz # 일관성을 위해 tarball 이름은 이렇게 유지.
+Source0:    hello_world-%{version}.tar.gz
 
 BuildRequires: gcc
 BuildRequires: make
@@ -19,15 +18,15 @@ It demonstrates basic RPM packaging with a Makefile.
 %setup -q -n hello_world-%{version} # tarball 이름에 맞춰 디렉토리 이름 지정
 
 %build
-# cd src # Makefile이 src 디렉토리 안에 있다면 이 줄이 필요.
-make %{?_smp_mflags}
+cd src # Makefile이 src 디렉토리 안에 있으므로 이동
+make build
 
 %install
-# cd src # Makefile이 src 디렉토리 안에 있다면 이 줄이 필요.
-make install DESTDIR=%{buildroot}
+cd src # Makefile이 src 디렉토리 안에 있으므로 이동
+make install DESTDIR=%{buildroot} PREFIX=%{_prefix}
 
 %files
-%{_bindir}/hello_program
+/usr/local/bin/hello
 
 %changelog
 * Mon Jun 16 2025 Your Name <your.email@example.com> - 1.0-1
