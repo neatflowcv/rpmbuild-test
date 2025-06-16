@@ -22,6 +22,7 @@ clean-tarball:
 .PHONY: clean
 clean: clean-tarball
 	$(MAKE) -C src clean
+	rm -rf rpm/BUILD rpm/BUILDROOT rpm/RPMS rpm/SRPMS
 
 .PHONY: help
 help:
