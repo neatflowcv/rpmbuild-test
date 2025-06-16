@@ -2,7 +2,7 @@ PREFIX ?= /usr/local
 
 .PHONY: build
 build:
-	gcc -o hello hello.c
+	gcc -g -o hello hello.c
 
 .PHONY: install
 install: build
